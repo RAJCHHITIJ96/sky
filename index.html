@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sky Park — Your Trusted Real Estate Partner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,650;9..144,340&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF9F6;
+    --paper-dim:#F3F1EC;
+    --ink:#15130F;
+    --ink-soft:#5B564E;
+    --ink-faint:#948E82;
+    --line:#E4E0D6;
+    --card:#FFFFFF;
+    --orange:#FF5A1F;
+    --orange-deep:#C7430E;
+    --orange-wash:#FFF1EA;
+    --radius:10px;
+    --maxw:1240px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    cursor:auto;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px;position:relative}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);
+    display:flex;align-items:center;gap:8px;margin-bottom:18px;
+  }
+  .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--orange);flex:none}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:560;letter-spacing:-.01em;line-height:1.05}
+  :focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}}
+
+  /* ---------- GRAIN OVERLAY ---------- */
+  .grain{position:fixed;inset:0;z-index:200;pointer-events:none;opacity:.035;mix-blend-mode:overlay}
+
+  /* ---------- CUSTOM CURSOR ---------- */
+  .cursor-dot{
+    position:fixed;top:0;left:0;width:10px;height:10px;border-radius:50%;
+    background:var(--orange);pointer-events:none;z-index:300;
+    transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s;
+    display:none;
+  }
+  .cursor-dot.expand{
+    width:64px;height:64px;background:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .cursor-dot .ctxt{
+    opacity:0;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#fff;transition:opacity .2s;
+  }
+  .cursor-dot.expand .ctxt{opacity:1}
+  @media(hover:hover) and (pointer:fine){.cursor-dot{display:block}
+    .hoverable{cursor:none}
+  }
+
+  /* ---------- LOAD-IN ---------- */
+  .line-mask{overflow:hidden;display:block}
+  .line-inner{display:block;transform:translateY(112%);opacity:0}
+  body.loaded .line-inner{animation:riseLine .95s cubic-bezier(.19,1,.22,1) forwards}
+  body.loaded .line-mask:nth-child(1) .line-inner{animation-delay:.15s}
+  body.loaded .line-mask:nth-child(2) .line-inner{animation-delay:.32s}
+  @keyframes riseLine{to{transform:translateY(0);opacity:1}}
+
+  .fade-up{opacity:0;transform:translateY(16px);transition:opacity .8s cubic-bezier(.19,1,.22,1),transform .8s cubic-bezier(.19,1,.22,1)}
+  body.loaded .hero .fade-up{transition-delay:var(--d,0s)}
+  body.loaded .hero .fade-up{opacity:1;transform:translateY(0)}
+
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.19,1,.22,1),transform .7s cubic-bezier(.19,1,.22,1)}
+  .reveal.in-view{opacity:1;transform:translateY(0)}
+
+  nav{opacity:0;animation:fadeIn .7s ease forwards}
+  body.loaded nav{animation-play-state:running}
+  @keyframes fadeIn{to{opacity:1}}
+
+  /* ---------- NAV ---------- */
+  header{position:sticky;top:0;z-index:50;background:rgba(250,249,246,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:background 0.3s, border-color 0.3s;}
+  nav.wrap{display:flex;align-items:center;justify-content:space-between;height:76px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:20px;letter-spacing:-.01em}
+  .logo .mark{width:26px;height:26px;flex:none}
+  .navlinks{display:flex;gap:36px;font-size:14.5px;color:var(--ink-soft)}
+  .navlinks a{position:relative;padding:4px 0;transition:color .2s}
+  .navlinks a:hover{color:var(--ink)}
+  .navlinks a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--orange);transition:width .25s}
+  .navlinks a:hover::after{width:100%}
+  .navcta{display:flex;align-items:center;gap:14px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:8px;font-size:14px;font-weight:500;transition:transform .18s ease,background .2s,color .2s,border-color .2s;position:relative}
+  .btn-primary{background:var(--ink);color:var(--paper)}
+  .btn-primary:hover{background:var(--orange-deep)}
+  .btn-ghost{border:1px solid var(--line);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--ink)}
+  .btn-text{color:var(--ink-soft);font-size:14.5px}
+  .btn-text:hover{color:var(--ink)}
+  @media(max-width:900px){.navlinks{display:none}}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:76px 0 0;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  .hero h1{font-size:clamp(38px,4.6vw,60px);max-width:560px;font-optical-sizing:auto}
+  .hero h1 em{font-style:normal;color:var(--orange-deep)}
+  .hero p{margin-top:22px;font-size:17px;line-height:1.65;color:var(--ink-soft);max-width:460px}
+  .hero-actions{display:flex;gap:14px;margin-top:34px}
+  .hero-stats{display:flex;gap:34px;margin-top:52px;padding-top:26px;border-top:1px solid var(--line)}
+  .stat .num{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;color:var(--ink)}
+  .stat .lbl{font-size:12px;color:var(--ink-faint);margin-top:4px}
+
+  .photo-mosaic{display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:130px 130px 130px;gap:12px;height:412px;margin-right:-64px}
+  .photo-mosaic .ph{
+    border-radius:var(--radius);background:linear-gradient(135deg,#DCD6C9,#B9AF9C);
+    position:relative;overflow:hidden;border:1px solid var(--line);
+    filter:grayscale(1) saturate(1) contrast(1.02);
+    transition:filter .6s cubic-bezier(.19,1,.22,1);
+  }
+  .photo-mosaic .ph:hover,.photo-mosaic .ph:focus-visible{filter:grayscale(0) saturate(1.25) contrast(1.05)}
+  .photo-mosaic .ph::after{content:'';position:absolute;inset:0;background:rgba(20,17,12,.06)}
+  .photo-mosaic .p1{grid-row:1/3}
+  .photo-mosaic .p2{grid-row:1/2}
+  .photo-mosaic .p3{grid-row:2/4}
+  .photo-mosaic .p4{grid-row:3/4}
+  .ph-tag{position:absolute;left:12px;bottom:12px;z-index:2;background:rgba(250,249,246,.92);backdrop-filter:blur(4px);padding:6px 10px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.04em;color:var(--ink)}
+  @media(max-width:900px){.photo-mosaic{margin-right:0}}
+
+  /* ---------- TICKER ---------- */
+  .ticker{margin-top:64px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--ink);overflow:hidden;position:relative;transform:translateY(12px);opacity:0;transition:transform .8s cubic-bezier(.19,1,.22,1),opacity .8s}
+  body.loaded .ticker{transform:translateY(0);opacity:1;transition-delay:1.05s}
+  .ticker-track{display:flex;white-space:nowrap;animation:scroll 34s linear infinite;padding:14px 0}
+  .ticker:hover .ticker-track{animation-play-state:paused}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .tick-item{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#EDEAE2;display:flex;align-items:center;gap:10px;padding:0 28px;border-right:1px solid rgba(255,255,255,.12)}
+  .tick-item .dot{width:6px;height:6px;border-radius:50%;background:var(--orange);flex:none}
+  .tick-item b{color:#fff;font-weight:500}
+
+  section{padding:100px 0}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:52px;flex-wrap:wrap}
+  .section-head h2{font-size:clamp(28px,3.2vw,38px)}
+  .section-head p{color:var(--ink-soft);max-width:420px;font-size:15px;line-height:1.6}
+
+  /* ---------- ABOUT / GIANT NUMERAL ---------- */
+  .about{background:var(--paper-dim);position:relative;overflow:hidden;transition:background 0.3s;}
+  .giant-num{
+    position:absolute;right:-2%;top:50%;transform:translateY(-50%);
+    font-family:'Fraunces',serif;font-weight:340;font-size:min(34vw,420px);
+    color:var(--ink);opacity:.05;line-height:1;pointer-events:none;user-select:none;
+  }
+  .about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:start;position:relative}
+  .about h2{font-size:clamp(30px,3.6vw,42px);max-width:480px}
+  .about p{margin-top:20px;color:var(--ink-soft);line-height:1.75;font-size:15.5px;max-width:460px}
+  .about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:16px}
+  .about-stat{background:var(--card);padding:28px 22px;transition:background 0.3s;}
+  .about-stat .num{font-family:'IBM Plex Mono',monospace;font-size:32px;color:var(--orange-deep);font-weight:500}
+  .about-stat .lbl{font-size:13px;color:var(--ink-soft);margin-top:6px}
+
+  /* ---------- SERVICES ---------- */
+  .svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .svc-card{background:var(--card);padding:34px 26px;position:relative;transition:background 0.3s;}
+  .svc-card::before{content:'';position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--orange);transition:width .3s cubic-bezier(.19,1,.22,1)}
+  .svc-card:hover::before{width:100%}
+  .svc-icon{width:38px;height:38px;color:var(--orange-deep);margin-bottom:22px;transition:transform .3s cubic-bezier(.34,1.4,.64,1)}
+  .svc-card:hover .svc-icon{transform:translateY(-3px)}
+  .svc-card h3{font-family:'Inter',sans-serif;font-weight:600;font-size:16.5px;letter-spacing:0}
+  .svc-card p{margin-top:10px;font-size:13.8px;color:var(--ink-soft);line-height:1.6}
+  .svc-more{display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-size:13px;font-family:'IBM Plex Mono',monospace;color:var(--ink)}
+  @media(max-width:900px){.svc-grid{grid-template-columns:1fr 1fr}}
+
+  /* ---------- PULL QUOTE ---------- */
+  .pullquote{padding:60px 0}
+  .pullquote .wrap{max-width:820px}
+  .pullquote blockquote{font-family:'Fraunces',serif;font-weight:550;font-optical-sizing:auto;font-size:clamp(24px,3.2vw,36px);line-height:1.35;letter-spacing:-.01em}
+  .pullquote blockquote span{color:var(--orange-deep)}
+  .pullquote cite{display:block;margin-top:24px;font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink-soft);letter-spacing:.03em}
+
+  /* ---------- EXPERTISE ---------- */
+  .expertise{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px}
+  .bar-row{margin-bottom:26px}
+  .bar-row:last-child{margin-bottom:0}
+  .bar-top{display:flex;justify-content:space-between;font-size:14px;margin-bottom:10px}
+  .bar-top .pct{font-family:'IBM Plex Mono',monospace;color:var(--orange-deep)}
+  .bar-track{height:6px;background:var(--paper-dim);border-radius:4px;overflow:hidden;border:1px solid var(--line);transition:background 0.3s, border-color 0.3s;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--orange-deep),var(--orange));border-radius:4px;width:0;transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+
+  /* ---------- GALLERY ---------- */
+  .gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .gal-card{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--card);position:relative;transition:background 0.3s, border-color 0.3s;}
+  .gal-card::after{content:'';position:absolute;left:16px;right:16px;bottom:0;height:2px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.19,1,.22,1)}
+  .gal-card:hover::after{transform:scaleX(1)}
+  .gal-img-wrap{overflow:hidden;position:relative}
+  .gal-img{height:200px;background:linear-gradient(135deg,#E3DDCF,#B9AF9C);position:relative;filter:grayscale(1) contrast(1.02);transition:filter .6s cubic-bezier(.19,1,.22,1)}
+  .gal-card:hover .gal-img{filter:grayscale(0) saturate(1.2)}
+  .gal-body{padding:18px 20px}
+  .gal-price{font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--orange-deep)}
+  .gal-name{font-size:15px;margin-top:6px;font-weight:500}
+  .gal-loc{font-size:13px;color:var(--ink-soft);margin-top:4px}
+  @media(max-width:900px){.gal-grid{grid-template-columns:1fr}}
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:760px}
+  .faq-item{border-bottom:1px solid var(--line);transition:border-color 0.3s;}
+  .faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;padding:22px 0;font-size:16px;font-family:'Fraunces',serif;font-weight:500;text-align:left}
+  .faq-q .plus{font-family:'IBM Plex Mono',monospace;color:var(--orange-deep);font-size:18px;transition:transform .25s}
+  .faq-item.open .plus{transform:rotate(45deg)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .faq-a p{padding-bottom:22px;color:var(--ink-soft);font-size:14.5px;line-height:1.7;max-width:640px}
+
+  /* ---------- CONTACT / FOOTER ---------- */
+  .contact{background:var(--ink);color:var(--paper);transition:background 0.3s, color 0.3s;}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px}
+  .contact h2{color:var(--paper);font-size:clamp(28px,3.4vw,38px)}
+  .contact p{color:#B8B2A6;margin-top:16px;line-height:1.7;font-size:15px;max-width:420px}
+  .contact-info{margin-top:30px;display:flex;flex-direction:column;gap:16px}
+  .contact-info div{display:flex;gap:12px;font-size:14.5px;color:#DAD5C9}
+  .contact-info svg{width:18px;height:18px;color:var(--orange);flex:none;margin-top:2px}
+  .map-box{border-radius:var(--radius);border:1px solid rgba(255,255,255,.14);height:100%;min-height:280px;background:linear-gradient(135deg,#252119,#15130F);position:relative;overflow:hidden}
+  .map-box::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.06) 1px,transparent 1px);background-size:20px 20px}
+  .map-pin{position:absolute;top:46%;left:52%;width:14px;height:14px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 8px rgba(255,90,31,.18)}
+
+  footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.1);padding:40px 0;transition:background 0.3s;}
+  .footer-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  .footer-row .flogo{font-family:'Fraunces',serif;color:var(--paper);font-size:16px}
+  .footer-links{display:flex;gap:22px;font-size:13.5px;color:#9C9689}
+  .footer-links a:hover{color:var(--orange)}
+  .footer-copy{font-size:12.5px;color:#726C60;font-family:'IBM Plex Mono',monospace}
+
+  /* ---------- FLOATING WIDGETS ---------- */
+  .chat-fab{position:fixed;right:24px;bottom:24px;z-index:60;width:56px;height:56px;border-radius:50%;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(20,17,12,.28);transition:transform .2s, background 0.2s, color 0.2s}
+  .chat-fab:hover{transform:scale(1.06);background:var(--orange-deep)}
+  .chat-fab svg{width:24px;height:24px}
+
+  .feat-bar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:55;background:rgba(21,19,15,.92);backdrop-filter:blur(10px);border-radius:100px;display:flex;align-items:center;gap:2px;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .feat-bar a{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:100px;font-size:13px;color:#D8D2C4;transition:background .2s,color .2s;font-family:'IBM Plex Mono',monospace}
+  .feat-bar a svg{width:15px;height:15px}
+  .feat-bar a:hover{background:var(--orange);color:#fff}
+  .feat-bar a.active{background:var(--orange);color:#fff}
+      /* Mobile Menu Styles */
+      .menu-toggle {
+        display: none;
+        width: 36px;
+        height: 36px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        color: var(--ink-soft);
+        border: 1px solid var(--line);
+        cursor: pointer;
+        background: none;
+        transition: background 0.2s, color 0.2s;
+      }
+      .menu-toggle:hover {
+        background: var(--paper-dim);
+        color: var(--ink);
+      }
+      .menu-toggle svg {
+        width: 20px;
+        height: 20px;
+      }
+      .mobile-menu {
+        position: fixed;
+        inset: 0;
+        z-index: 180;
+        background: var(--paper);
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        transform: translateX(100%);
+        visibility: hidden;
+        transition: transform 0.3s cubic-bezier(.19,1,.22,1), visibility 0.3s;
+      }
+      .mobile-menu.active {
+        transform: translateX(0);
+        visibility: visible;
+      }
+      .mobile-menu-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+      }
+      .mobile-menu-head .flogo {
+        font-family: 'Fraunces', serif;
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .menu-close {
+        font-size: 32px;
+        color: var(--ink-soft);
+        cursor: pointer;
+        background: none;
+        border: none;
+      }
+      .mobile-links {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        font-size: 18px;
+        font-weight: 500;
+      }
+      .mobile-links a {
+        color: var(--ink);
+        padding: 8px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      @media(max-width:900px){
+        .hero-grid,.about-grid,.expertise,.contact-grid{grid-template-columns:1fr}
+        .photo-mosaic{margin-top:32px; margin-right:0}
+        .hero-stats{flex-wrap:wrap;row-gap:20px}
+        .giant-num{display:none}
+        .menu-toggle { display: flex; }
+        .navcta { display: none !important; }
+        .navlinks { display: none !important; }
+        .kbd-hint { display: none !important; }
+      }
+
+      @media(max-width:768px){
+        .wrap { padding: 0 16px; }
+        .nav-util { gap: 8px; }
+        .kbd-hint {
+          display: flex !important;
+          width: 36px;
+          height: 36px;
+          padding: 0;
+          border: 1px solid var(--line);
+          background: none;
+          justify-content: center;
+          font-size: 0;
+        }
+        .kbd-hint svg {
+          width: 18px;
+          height: 18px;
+          margin: 0;
+        }
+        .kbd-hint kbd {
+          display: none;
+        }
+        .feat-bar { display: none !important; }
+        .expertise { gap: 32px; }
+        .contact-grid { gap: 32px; }
+        .cd-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 12px 16px;
+        }
+        .cd-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+
+      @media(max-width:600px){
+        .photo-mosaic {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 140px 140px;
+          height: auto;
+        }
+        .photo-mosaic .p1 { grid-row: 1/2; }
+        .photo-mosaic .p2 { grid-row: 1/2; }
+        .photo-mosaic .p3 { grid-row: 2/3; }
+        .photo-mosaic .p4 { grid-row: 2/3; }
+        
+        .hero-stats {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+        }
+        .hero-stats .stat:last-child {
+          grid-column: span 2;
+          border-top: 1px solid var(--line);
+          padding-top: 10px;
+        }
+        .about-stats {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media(max-width:480px){
+        .logo { font-size: 18px; }
+        .about-stat { padding: 18px 14px; }
+        .about-stat .num { font-size: 26px; }
+        .svc-grid { grid-template-columns: 1fr; }
+        .modal-panel { padding: 20px; }
+        .modal-head h3 { font-size: 18px; }
+        .agent-badge {
+          left: 16px;
+          right: 16px;
+          bottom: 80px;
+          width: auto;
+        }
+        .hero-actions {
+          flex-direction: column;
+          gap: 12px;
+          width: 100%;
+        }
+        .hero-actions .btn {
+          width: 100%;
+          justify-content: center;
+          text-align: center;
+        }
+        .chat-fab {
+          right: 16px;
+          left: auto;
+          bottom: 16px;
+        }
+      }
+
+      /* ================= V3 FEATURES ================= */
+
+      /* ---- portal (dark) mode ---- */
+      body.portal{--paper:#15130F;--paper-dim:#1D1A14;--ink:#F7F5EF;--ink-soft:#B8B2A6;--ink-faint:#847E71;--line:#332E24;--card:#1D1A14;--orange-wash:#2A1D14}
+      body.portal header{background:rgba(21,19,15,.86)}
+      body.portal .photo-mosaic .ph,body.portal .gal-img{filter:grayscale(1) invert(.06)}
+      body.portal .photo-mosaic .ph:hover,body.portal .photo-mosaic .ph:focus-visible,body.portal .gal-card:hover .gal-img{filter:grayscale(0) saturate(1.1) invert(.06)}
+
+      /* ---- scroll progress ---- */
+      .scroll-progress{position:fixed;top:0;left:0;height:3px;width:0%;background:var(--orange);z-index:120;transition:width .1s linear}
+
+      /* ---- nav utility icons ---- */
+      .nav-util{display:flex;align-items:center;gap:16px}
+      .nav-icon-btn{position:relative;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;color:var(--ink-soft);transition:background .2s,color .2s}
+      .nav-icon-btn:hover{background:var(--paper-dim);color:var(--ink)}
+      .nav-icon-btn svg{width:18px;height:18px}
+      .save-badge{position:absolute;top:-3px;right:-3px;min-width:15px;height:15px;padding:0 3px;border-radius:8px;background:var(--orange);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;display:flex;align-items:center;justify-content:center;transform:scale(0);transition:transform .25s cubic-bezier(.34,1.5,.64,1)}
+      .save-badge.show{transform:scale(1)}
+      .kbd-hint{display:flex;align-items:center;gap:5px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-faint)}
+      .kbd-hint kbd{background:var(--paper-dim);border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-family:inherit;font-size:11px}
+
+  /* ---- command palette ---- */
+  .cmdk-overlay{position:fixed;inset:0;z-index:150;background:rgba(21,19,15,.55);backdrop-filter:blur(3px);display:flex;align-items:flex-start;justify-content:center;padding-top:14vh;opacity:0;pointer-events:none;transition:opacity .2s}
+  .cmdk-overlay.active{opacity:1;pointer-events:auto}
+  .cmdk-panel{width:min(560px,90vw);background:var(--card);border-radius:12px;border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden;transform:translateY(-10px);transition:transform .25s cubic-bezier(.19,1,.22,1)}
+  .cmdk-overlay.active .cmdk-panel{transform:translateY(0)}
+  .cmdk-input-row{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+  .cmdk-input-row svg{width:17px;height:17px;color:var(--ink-faint);flex:none}
+  .cmdk-input-row input{flex:1;border:none;background:none;font-family:'Inter',sans-serif;font-size:15px;color:var(--ink);outline:none}
+  .cmdk-esc{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-faint);border:1px solid var(--line);border-radius:5px;padding:2px 6px}
+  .cmdk-results{max-height:320px;overflow-y:auto;padding:8px}
+  .cmdk-item{display:flex;justify-content:space-between;align-items:center;padding:12px 12px;border-radius:8px;cursor:pointer;transition:background .15s}
+  .cmdk-item:hover,.cmdk-item.sel{background:var(--orange-wash)}
+  .cmdk-item .ti{font-size:14px;font-weight:500}
+  .cmdk-item .tl{font-size:12px;color:var(--ink-soft);margin-top:2px}
+  .cmdk-item .tp{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--orange-deep)}
+  .cmdk-empty{padding:28px;text-align:center;font-size:13.5px;color:var(--ink-faint)}
+
+  /* ---- generic modal (EMI, comparison) ---- */
+  .modal-overlay{position:fixed;inset:0;z-index:150;background:rgba(21,19,15,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;padding:24px}
+  .modal-overlay.active{opacity:1;pointer-events:auto}
+  .modal-panel{width:min(480px,100%);background:var(--card);border-radius:14px;border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.3);padding:30px;transform:translateY(12px);transition:transform .25s cubic-bezier(.19,1,.22,1)}
+  .modal-overlay.active .modal-panel{transform:translateY(0)}
+  .modal-panel.wide{width:min(720px,100%)}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+  .modal-head h3{font-size:21px}
+  .modal-close{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);transition:background .2s;cursor:pointer}
+  .modal-close:hover{background:var(--paper-dim)}
+  .modal-close svg{width:16px;height:16px}
+
+  .emi-row{margin-bottom:22px}
+  .emi-row-top{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink-soft);margin-bottom:10px}
+  .emi-row-top b{font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:500}
+  input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:4px;background:var(--line);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--orange);cursor:pointer;border:3px solid var(--card);box-shadow:0 0 0 1px var(--orange)}
+  .emi-output{margin-top:24px;padding:20px;border-radius:10px;background:var(--paper-dim);text-align:center;transition:background 0.3s;}
+  .emi-output .amt{font-family:'IBM Plex Mono',monospace;font-size:30px;color:var(--orange-deep);font-weight:500}
+  .emi-output .lbl{font-size:12px;color:var(--ink-soft);margin-top:6px;text-transform:uppercase;letter-spacing:.06em}
+
+  /* ---- gallery card additions ---- */
+  .gal-fav,.gal-cmp{position:absolute;top:10px;z-index:3;width:34px;height:34px;border-radius:50%;background:rgba(250,249,246,.92);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;border:none;cursor:pointer}
+  .gal-fav{right:10px}
+  .gal-cmp{right:52px}
+  .gal-fav svg,.gal-cmp svg{width:16px;height:16px;color:var(--ink);transition:color .2s,fill .2s}
+  .gal-fav:hover,.gal-cmp:hover{transform:scale(1.08)}
+  .gal-fav.active svg{fill:var(--orange);color:var(--orange)}
+  .gal-cmp.active{background:var(--orange)}
+  .gal-cmp.active svg{color:#fff}
+  .gal-meta-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+  .walk-score{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft)}
+  .walk-score .dot3{width:6px;height:6px;border-radius:50%;background:var(--orange)}
+
+  /* ---- compare drawer ---- */
+  .compare-drawer{position:fixed;left:0;right:0;bottom:0;z-index:90;background:var(--ink);color:var(--paper);transform:translateY(100%);transition:transform .35s cubic-bezier(.19,1,.22,1);padding:16px 0}
+  .compare-drawer.show{transform:translateY(0)}
+  .cd-row{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .cd-chips{display:flex;gap:10px;flex-wrap:wrap}
+  .cd-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:8px;padding:8px 12px;font-size:13px}
+  .cd-chip button{color:#B8B2A6;font-size:14px;background:none;border:none;cursor:pointer}
+  .cd-actions{display:flex;align-items:center;gap:12px}
+  .cd-count{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#B8B2A6}
+
+  /* ---- agent status badge ---- */
+  .agent-badge{position:fixed;right:24px;bottom:92px;z-index:59;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 10px 24px rgba(0,0,0,.12);opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s;pointer-events:none}
+  .agent-badge.show{opacity:1;transform:translateY(0);pointer-events:auto}
+  .agent-badge .pulse{width:8px;height:8px;border-radius:50%;background:#2FAE66;position:relative;flex:none}
+  .agent-badge .pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:#2FAE66;opacity:.4;animation:pulse 1.8s ease-out infinite}
+  @keyframes pulse{0%{transform:scale(.6);opacity:.5}100%{transform:scale(2.2);opacity:0}}
+  .agent-badge span{font-size:12.5px;color:var(--ink-soft)}
+  .agent-badge .abx{margin-left:4px;color:var(--ink-faint);font-size:14px;cursor:pointer}
+
+  /* ---- chatbot panel ---- */
+  .chat-panel{position:fixed;right:24px;bottom:92px;z-index:65;width:340px;max-width:88vw;height:440px;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;transform:translateY(16px) scale(.97);opacity:0;pointer-events:none;transition:transform .28s cubic-bezier(.19,1,.22,1),opacity .28s}
+  .chat-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto}
+  .chat-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .chat-avatar{width:34px;height:34px;border-radius:9px;background:var(--paper-dim);display:flex;align-items:center;justify-content:center;flex:none}
+  .chat-avatar svg{width:20px;height:20px;color:var(--orange-deep)}
+  .chat-head-txt{flex:1}
+  .chat-head-txt .nm{font-size:14px;font-weight:600}
+  .chat-head-txt .st{font-size:11.5px;color:var(--ink-soft);display:flex;align-items:center;gap:5px}
+  .chat-head-txt .st .d{width:6px;height:6px;border-radius:50%;background:#2FAE66}
+  .chat-close{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);cursor:pointer}
+  .chat-close:hover{background:var(--paper-dim)}
+  .chat-close svg{width:16px;height:16px}
+  .chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+  .msg{max-width:82%;padding:10px 13px;border-radius:12px;font-size:13.5px;line-height:1.5}
+  .msg.bot{background:var(--paper-dim);align-self:flex-start;border-bottom-left-radius:3px}
+  .msg.user{background:var(--orange);color:#fff;align-self:flex-end;border-bottom-right-radius:3px}
+  .typing{display:flex;gap:4px;padding:12px 13px;background:var(--paper-dim);border-radius:12px;border-bottom-left-radius:3px;align-self:flex-start;width:fit-content}
+  .typing span{width:5px;height:5px;border-radius:50%;background:var(--orange-deep);animation:tbounce 1.2s infinite}
+  .typing span:nth-child(2){animation-delay:.15s}
+  .typing span:nth-child(3){animation-delay:.3s}
+  @keyframes tbounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+  .chat-chips{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 12px}
+  .chat-chip{font-size:12px;font-family:'IBM Plex Mono',monospace;border:1px solid var(--line);border-radius:100px;padding:7px 12px;color:var(--ink-soft);transition:background .2s,color .2s;cursor:pointer}
+  .chat-chip:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
+  .chat-input-row{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line)}
+  .chat-input-row input{flex:1;border:1px solid var(--line);border-radius:100px;padding:9px 14px;font-size:13px;font-family:'Inter',sans-serif;outline:none;background:var(--paper-dim);color:var(--ink)}
+  .chat-send{width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer}
+  .chat-send svg{width:15px;height:15px}
+  .chat-send:hover{background:var(--orange-deep)}
+  @media(max-width:500px){.chat-panel{left:16px;right:16px;width:auto}}
+
+  /* Saved list styling inside modal */
+  .saved-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 10px;
+  }
+  .saved-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper-dim);
+    transition: transform 0.2s, background 0.3s;
+  }
+  .saved-item:hover {
+    transform: translateY(-2px);
+  }
+  .saved-item-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    background-size: cover;
+    background-position: center;
+    flex: none;
+    border: 1px solid var(--line);
+  }
+  .saved-item-details {
+    flex: 1;
+  }
+  .saved-item-name {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .saved-item-price {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--orange-deep);
+    margin-top: 4px;
+  }
+  .saved-item-remove {
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s;
+  }
+  .saved-item-remove:hover {
+    color: var(--orange-deep);
+  }
+  .saved-empty {
+    text-align: center;
+    color: var(--ink-faint);
+    padding: 24px;
+    font-size: 14px;
+  }
+
+  /* Comparison Table styling inside modal */
+  .compare-modal-body {
+    overflow-x: auto;
+    margin-top: 16px;
+  }
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+  }
+  .compare-table th, .compare-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .compare-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--paper-dim);
+  }
+  .compare-table td.prop-col {
+    font-weight: 600;
+  }
+  .compare-table tr:hover {
+    background: var(--paper-dim);
+  }
+</style>
+</head>
+<body>
+
+<svg class="grain" xmlns="http://www.w3.org/2000/svg">
+  <filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter>
+  <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+</svg>
+<div class="cursor-dot" id="cursorDot"><span class="ctxt">VIEW</span></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<header>
+  <nav class="wrap">
+    <div class="logo">
+      <svg class="mark" viewBox="0 0 26 26" fill="none"><path d="M13 2L23 9V24H3V9L13 2Z" stroke="#15130F" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 24V15H17V24" stroke="#FF5A1F" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      SKY PARK
+    </div>
+    <div class="navlinks">
+      <a href="#properties">Properties</a><a href="#about">About</a><a href="#services">Services</a><a href="#gallery">Gallery</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>
+    </div>
+    <div class="nav-util">
+      <button class="kbd-hint" id="cmdkTrigger" aria-label="Open search"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Search<kbd>⌘K</kbd></button>
+      <button class="nav-icon-btn" id="savedBtn" aria-label="Saved listings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.8 8.6c0 4.5-8.8 10-8.8 10s-8.8-5.5-8.8-10a4.8 4.8 0 018.8-2.7A4.8 4.8 0 0120.8 8.6z"/></svg>
+        <span class="save-badge" id="saveBadge">0</span>
+      </button>
+      <button class="nav-icon-btn" id="portalToggle" aria-label="Toggle agent portal view">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="navcta">
+      <a href="#" class="btn-text">Login</a>
+      <a href="#" class="btn btn-primary magnetic">Register</a>
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-head">
+    <div class="flogo">SKY PARK</div>
+    <button class="menu-close" id="menuClose" aria-label="Close Menu">&times;</button>
+  </div>
+  <div class="mobile-links">
+    <a href="#properties">Properties</a>
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+    <hr style="border: none; border-top: 1px solid var(--line); margin: 16px 0;">
+    <a href="#" class="btn btn-primary" style="justify-content: center; width: 100%;">Register</a>
+    <a href="#" style="text-align: center; margin-top: 12px; display: block; color: var(--ink-soft);">Login</a>
+  </div>
+</div>
+
+<section class="hero" id="properties">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow fade-up" style="--d:.05s">Lomay Infra Developers · Patna, Bihar</div>
+      <h1>
+        <span class="line-mask"><span class="line-inner">Your trusted</span></span>
+        <span class="line-mask"><span class="line-inner">real estate <em>partner.</em></span></span>
+      </h1>
+      <p class="fade-up" style="--d:.5s">We connect you to the best deals, expert advice, and the perfect property — whether you're buying, selling, or investing. Twenty years of building trust, one property at a time.</p>
+      <div class="hero-actions fade-up" style="--d:.62s">
+        <a href="#gallery" class="btn btn-primary magnetic">Explore Properties</a>
+        <a href="#contact" class="btn btn-ghost magnetic">Book a Consultation</a>
+      </div>
+      <div class="hero-stats fade-up" style="--d:.74s">
+        <div class="stat"><div class="num">3,800+</div><div class="lbl">Happy Clients</div></div>
+        <div class="stat"><div class="num">2,832+</div><div class="lbl">Properties Sold</div></div>
+        <div class="stat"><div class="num">280+</div><div class="lbl">Industry Awards</div></div>
+      </div>
+    </div>
+    <div class="photo-mosaic fade-up" style="--d:.4s">
+      <div class="ph p1 hoverable" tabindex="0" style="background-image: url('assets/1.png'); background-size: cover; background-position: center;"><span class="ph-tag">FEATURED · KANKARBAGH</span></div>
+      <div class="ph p2 hoverable" tabindex="0" style="background-image: url('assets/2.png'); background-size: cover; background-position: center;"><span class="ph-tag">3BHK · ASHOK NAGAR</span></div>
+      <div class="ph p3 hoverable" tabindex="0" style="background-image: url('assets/3.png'); background-size: cover; background-position: center;"><span class="ph-tag">COMMERCIAL PLOT</span></div>
+      <div class="ph p4 hoverable" tabindex="0" style="background-image: url('assets/4.png'); background-size: cover; background-position: center;"><span class="ph-tag">SAMPATCHAK VILLA</span></div>
+    </div>
+  </div>
+
+  <div class="ticker">
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="giant-num">20</div>
+  <div class="wrap about-grid">
+    <div class="reveal">
+      <div class="eyebrow">Since day one</div>
+      <h2>Building dreams,<br>creating value.</h2>
+      <p>At Lomay Infra Developers, we've been helping people find their dream homes and profitable property investments for over two decades. Our commitment to trust, transparency, and customer satisfaction has made us a leader in the real estate industry.</p>
+      <p>Whether you're buying, selling, or investing, our expert team ensures a smooth, rewarding, and hassle-free experience — because your success is our priority.</p>
+    </div>
+    <div class="about-stats reveal">
+      <div class="about-stat"><div class="num">3,800+</div><div class="lbl">Happy Clients</div></div>
+      <div class="about-stat"><div class="num">2,832+</div><div class="lbl">Properties Sold</div></div>
+      <div class="about-stat"><div class="num">280+</div><div class="lbl">Industry Awards</div></div>
+      <div class="about-stat"><div class="num">20 yrs</div><div class="lbl">In Business</div></div>
+      <div class="about-stat"><div class="num">99%</div><div class="lbl">Client Retention</div></div>
+      <div class="about-stat"><div class="num">24/7</div><div class="lbl">Support Desk</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Our real estate services</h2>
+      <p>Delivering trusted property solutions with unmatched market knowledge and negotiation skill.</p>
+    </div>
+    <div class="svc-grid reveal">
+      <div class="svc-card">
+        <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 11L12 3l9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+        <h3>Property Buying</h3>
+        <p>Complete guidance from search to keys-in-hand, for homes and commercial property alike.</p>
+        <span class="svc-more">Read more →</span>
+      </div>
+      <div class="svc-card">
+        <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+        <h3>Property Selling</h3>
+        <p>Professional listings and targeted marketing that sell your property faster, for more.</p>
+        <span class="svc-more">Read more →</span>
+      </div>
+      <div class="svc-card">
+        <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <h3>Investment Advice</h3>
+        <p>Strategies tailored to your goals and budget, built to maximize long-term returns.</p>
+        <span class="svc-more">Read more →</span>
+      </div>
+      <div class="svc-card">
+        <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="1.5"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        <h3>Property Management</h3>
+        <p>End-to-end management solutions for hassle-free ownership, start to finish.</p>
+        <span class="svc-more">Read more →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pullquote">
+  <div class="wrap reveal">
+    <blockquote>“We'd tried two other agents before Sky Park. They found us a 3BHK in Kankarbagh within budget, <span>handled every paper</span>, and never once made us chase them for an update.”</blockquote>
+    <cite>— R. Sinha, Homeowner, Kankarbagh</cite>
+  </div>
+</section>
+
+<section class="about" style="padding-top:20px">
+  <div class="wrap expertise reveal">
+    <div>
+      <div class="eyebrow">Expertise</div>
+      <h2 style="font-size:clamp(28px,3.4vw,38px)">Our real estate excellence.</h2>
+      <p style="color:var(--ink-soft);margin-top:16px;line-height:1.7;font-size:15px">Trusted property solutions backed by unmatched market knowledge and negotiation skill, for over two decades.</p>
+    </div>
+    <div>
+      <div class="bar-row"><div class="bar-top"><span>Experienced Agents</span><span class="pct">99%</span></div><div class="bar-track"><div class="bar-fill" data-w="99"></div></div></div>
+      <div class="bar-row"><div class="bar-top"><span>Property Deal Success</span><span class="pct">95%</span></div><div class="bar-track"><div class="bar-fill" data-w="95"></div></div></div>
+      <div class="bar-row"><div class="bar-top"><span>Market Insight &amp; Strategy</span><span class="pct">92%</span></div><div class="bar-track"><div class="bar-fill" data-w="92"></div></div></div>
+      <div class="bar-row"><div class="bar-top"><span>Client Support &amp; Service</span><span class="pct">96%</span></div><div class="bar-track"><div class="bar-fill" data-w="96"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Featured properties</h2>
+      <p>A sample of current listings across Patna. Full catalogue in the gallery.</p>
+    </div>
+    <div class="gal-grid">
+      <div class="gal-card reveal hoverable" tabindex="0" data-id="p1" data-name="3BHK Residential Flat" data-loc="Kankarbagh, Patna" data-price="₹68,00,000" data-sqft="1,180 sqft" data-walk="78">
+        <div class="gal-img-wrap">
+          <div class="gal-img" style="background-image: url('assets/card 1.png'); background-size: cover; background-position: center;"></div>
+          <button class="gal-cmp" aria-label="Add to compare"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></button>
+          <button class="gal-fav" aria-label="Save listing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 8.6c0 4.5-8.8 10-8.8 10s-8.8-5.5-8.8-10a4.8 4.8 0 018.8-2.7A4.8 4.8 0 0120.8 8.6z"/></svg></button>
+        </div>
+        <div class="gal-body">
+          <div class="gal-price">₹68,00,000</div>
+          <div class="gal-name">3BHK Residential Flat</div>
+          <div class="gal-loc">Kankarbagh, Patna</div>
+          <div class="gal-meta-row">
+            <span class="mono" style="font-size:11.5px;color:var(--ink-faint)">1,180 sqft</span>
+            <span class="walk-score"><span class="dot3"></span>Walk Score 78</span>
+          </div>
+        </div>
+      </div>
+      <div class="gal-card reveal hoverable" tabindex="0" data-id="p2" data-name="Commercial Plot, Main Road" data-loc="Ashok Nagar, Patna" data-price="₹1,42,00,000" data-sqft="2,400 sqft" data-walk="91">
+        <div class="gal-img-wrap">
+          <div class="gal-img" style="background-image: url('assets/card 2.png'); background-size: cover; background-position: center;"></div>
+          <button class="gal-cmp" aria-label="Add to compare"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></button>
+          <button class="gal-fav" aria-label="Save listing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 8.6c0 4.5-8.8 10-8.8 10s-8.8-5.5-8.8-10a4.8 4.8 0 018.8-2.7A4.8 4.8 0 0120.8 8.6z"/></svg></button>
+        </div>
+        <div class="gal-body">
+          <div class="gal-price">₹1,42,00,000</div>
+          <div class="gal-name">Commercial Plot, Main Road</div>
+          <div class="gal-loc">Ashok Nagar, Patna</div>
+          <div class="gal-meta-row">
+            <span class="mono" style="font-size:11.5px;color:var(--ink-faint)">2,400 sqft</span>
+            <span class="walk-score"><span class="dot3"></span>Walk Score 91</span>
+          </div>
+        </div>
+      </div>
+      <div class="gal-card reveal hoverable" tabindex="0" data-id="p3" data-name="Independent Villa" data-loc="Sampatchak, Patna" data-price="₹95,50,000" data-sqft="1,850 sqft" data-walk="64">
+        <div class="gal-img-wrap">
+          <div class="gal-img" style="background-image: url('assets/card 1.png'); background-size: cover; background-position: center;"></div>
+          <button class="gal-cmp" aria-label="Add to compare"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></button>
+          <button class="gal-fav" aria-label="Save listing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 8.6c0 4.5-8.8 10-8.8 10s-8.8-5.5-8.8-10a4.8 4.8 0 018.8-2.7A4.8 4.8 0 0120.8 8.6z"/></svg></button>
+        </div>
+        <div class="gal-body">
+          <div class="gal-price">₹95,50,000</div>
+          <div class="gal-name">Independent Villa</div>
+          <div class="gal-loc">Sampatchak, Patna</div>
+          <div class="gal-meta-row">
+            <span class="mono" style="font-size:11.5px;color:var(--ink-faint)">1,850 sqft</span>
+            <span class="walk-score"><span class="dot3"></span>Walk Score 64</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Get every answer</h2>
+      <p>Frequently asked questions from buyers and sellers.</p>
+    </div>
+    <div class="faq reveal">
+      <div class="faq-item open">
+        <button class="faq-q"><span>How do I start buying a property?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Begin by determining your budget, getting pre-approved for a loan, and shortlisting preferred locations. Our team will then help you find and negotiate the best property for your needs.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span>What costs are involved in buying real estate?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Beyond the property price, expect registration charges, stamp duty, brokerage, and legal documentation fees. We walk you through every cost upfront — no surprises at closing.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span>Do you help with home loans and legal paperwork?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Yes. We coordinate directly with partner banks for loan approval and manage all legal documentation, title verification, and registration on your behalf.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span>Can you help me sell my property faster?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Our listings reach a verified buyer network, backed by professional photography, targeted marketing, and pricing strategy grounded in current market data.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap contact-grid reveal">
+    <div>
+      <div class="eyebrow" style="color:var(--orange)">Get in touch</div>
+      <h2>Let's find your next property.</h2>
+      <p>Reach out for a free consultation — our team responds within one business day.</p>
+      <div class="contact-info">
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>3C, Bypass Road, Changar, Gali No-1, Kankarbagh, Ashok Nagar (Patna), Sampatchak, Patna – 800020, Bihar</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.1-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8.1 9.7a16 16 0 006.2 6.2l1.2-1.2a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.7 2z"/></svg>+91 94729 72509</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>skyparkcity.in</div>
+      </div>
+    </div>
+    <div class="map-box"><div class="map-pin"></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <div class="flogo">SKY PARK</div>
+    <div class="footer-links"><a href="#">Home</a><a href="#">About</a><a href="#">Gallery</a><a href="#">Register</a><a href="#">Login</a><a href="#">Contact</a></div>
+    <div class="footer-copy">© 2026 skyparkcity.in — All rights reserved</div>
+  </div>
+</footer>
+
+<!-- chat fab + panel -->
+<div class="chat-fab" role="button" aria-label="Open chat" tabindex="0" id="chatFab">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+</div>
+
+<div class="agent-badge" id="agentBadge">
+  <span class="pulse"></span>
+  <span>Agent online · replies in ~10 min</span>
+  <span class="abx" id="agentBadgeClose">✕</span>
+</div>
+
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head">
+    <div class="chat-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2L23 9V24H3V9L13 2Z"/><path d="M9 24V15H17V24" stroke="#FF5A1F"/></svg></div>
+    <div class="chat-head-txt">
+      <div class="nm">Sky Park Assist</div>
+      <div class="st"><span class="d"></span>Online now</div>
+    </div>
+    <div class="chat-close" id="chatClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="msg bot">Hi, I'm here to help you find a property in Patna. What are you looking for today?</div>
+  </div>
+  <div class="chat-chips" id="chatChips">
+    <button class="chat-chip" data-r="visit">Book a site visit</button>
+    <button class="chat-chip" data-r="emi">EMI query</button>
+    <button class="chat-chip" data-r="agent">Talk to an agent</button>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Type a message…">
+    <button class="chat-send" id="chatSend" aria-label="Send message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
+  </div>
+</div>
+
+
+
+<div class="feat-bar">
+  <a href="#properties" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="9" width="18" height="12" rx="1"/><path d="M8 9V7a4 4 0 018 0v2"/></svg>Search Plot</a>
+  <a href="#gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Gallery</a>
+  <a href="#" id="emiTrigger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20M2 12h20"/></svg>EMI Calculator</a>
+  <a href="#contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.1-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8.1 9.7a16 16 0 006.2 6.2l1.2-1.2a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.7 2z"/></svg>Talk to Us</a>
+</div>
+
+<!-- command palette -->
+<div class="cmdk-overlay" id="cmdkOverlay">
+  <div class="cmdk-panel">
+    <div class="cmdk-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="cmdkInput" placeholder="Search listings by locality, type, price…">
+      <span class="cmdk-esc">ESC</span>
+    </div>
+    <div class="cmdk-results" id="cmdkResults"></div>
+  </div>
+</div>
+
+<!-- EMI modal -->
+<div class="modal-overlay" id="emiOverlay">
+  <div class="modal-panel">
+    <div class="modal-head"><h3>EMI Calculator</h3><div class="modal-close" id="emiClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div></div>
+    <div class="emi-row">
+      <div class="emi-row-top"><span>Loan Amount</span><b id="emiAmtLbl">₹50,00,000</b></div>
+      <input type="range" id="emiAmt" min="500000" max="20000000" step="100000" value="5000000">
+    </div>
+    <div class="emi-row">
+      <div class="emi-row-top"><span>Tenure</span><b id="emiTenLbl">20 yrs</b></div>
+      <input type="range" id="emiTen" min="1" max="30" step="1" value="20">
+    </div>
+    <div class="emi-row">
+      <div class="emi-row-top"><span>Interest Rate</span><b id="emiRateLbl">8.5%</b></div>
+      <input type="range" id="emiRate" min="6" max="14" step="0.1" value="8.5">
+    </div>
+    <div class="emi-output">
+      <div class="amt" id="emiResult">₹43,391</div>
+      <div class="lbl">Estimated Monthly EMI</div>
+    </div>
+  </div>
+</div>
+
+<!-- Saved Listings Modal -->
+<div class="modal-overlay" id="savedOverlay">
+  <div class="modal-panel">
+    <div class="modal-head">
+      <h3>Saved Listings</h3>
+      <div class="modal-close" id="savedClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </div>
+    </div>
+    <div id="savedModalBody" class="saved-list-container">
+      <!-- Dynamic saved list will be populated here -->
+    </div>
+  </div>
+</div>
+
+<!-- Comparison Modal -->
+<div class="modal-overlay" id="compareOverlay">
+  <div class="modal-panel wide">
+    <div class="modal-head">
+      <h3>Property Comparison</h3>
+      <div class="modal-close" id="compareClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </div>
+    </div>
+    <div id="compareModalBody" class="compare-modal-body">
+      <!-- Comparison table populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- Compare Drawer -->
+<div class="compare-drawer" id="compareDrawer">
+  <div class="wrap cd-row">
+    <div class="cd-chips" id="compareChips"></div>
+    <div class="cd-actions">
+      <span class="cd-count" id="compareCount">0 selected</span>
+      <button class="btn btn-primary magnetic" id="compareBtn">Compare Now</button>
+      <button class="btn btn-ghost magnetic" id="clearCompareBtn" style="color: #fff; border-color: rgba(255,255,255,0.2);">Clear All</button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Add loaded class to body
+  document.body.classList.add('loaded');
+
+  // Properties Database
+  const properties = [
+    { id: 'p1', name: '3BHK Residential Flat', loc: 'Kankarbagh, Patna', price: '₹68,00,000', rawPrice: 6800000, sqft: '1,180 sqft', walk: 78, img: 'assets/card 1.png' },
+    { id: 'p2', name: 'Commercial Plot, Main Road', loc: 'Ashok Nagar, Patna', price: '₹1,42,00,000', rawPrice: 14200000, sqft: '2,400 sqft', walk: 91, img: 'assets/card 2.png' },
+    { id: 'p3', name: 'Independent Villa', loc: 'Sampatchak, Patna', price: '₹95,50,000', rawPrice: 9550000, sqft: '1,850 sqft', walk: 64, img: 'assets/card 1.png' }
+  ];
+
+  // ==========================================================================
+  // CUSTOM CURSOR
+  // ==========================================================================
+  const cursorDot = document.getElementById('cursorDot');
+  if (cursorDot) {
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    // Smooth cursor movement using lerp (interpolation)
+    const tickCursor = () => {
+      cursorX += (mouseX - cursorX) * 0.15;
+      cursorY += (mouseY - cursorY) * 0.15;
+      cursorDot.style.left = `${cursorX}px`;
+      cursorDot.style.top = `${cursorY}px`;
+      requestAnimationFrame(tickCursor);
+    };
+    tickCursor();
+
+    // Hoverable expand triggers
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest('.hoverable')) {
+        cursorDot.classList.add('expand');
+      }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest('.hoverable')) {
+        cursorDot.classList.remove('expand');
+      }
+    });
+  }
+
+  // ==========================================================================
+  // MAGNETIC BUTTON EFFECT
+  // ==========================================================================
+  const magneticEls = document.querySelectorAll('.magnetic');
+  magneticEls.forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const bound = el.getBoundingClientRect();
+      const x = e.clientX - bound.left - (bound.width / 2);
+      const y = e.clientY - bound.top - (bound.height / 2);
+      el.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+  });
+
+  // ==========================================================================
+  // SCROLL PROGRESS BAR
+  // ==========================================================================
+  const scrollProgress = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    if (scrollProgress) {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
+      scrollProgress.style.width = `${progress}%`;
+    }
+  });
+
+  // ==========================================================================
+  // INTERSECTION REVEALS & ANCHORED SKILL BARS
+  // ==========================================================================
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in-view');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // Skill Bars Width fill
+  const skillBars = document.querySelectorAll('.bar-fill');
+  const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const fillEl = e.target;
+        const targetWidth = fillEl.getAttribute('data-w');
+        fillEl.style.width = `${targetWidth}%`;
+        skillObserver.unobserve(fillEl);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  skillBars.forEach(b => skillObserver.observe(b));
+
+  // ==========================================================================
+  // LOOP TICKER
+  // ==========================================================================
+  const tickerItems = [
+    ['Just Sold', '3BHK Kankarbagh — ₹68L'],
+    ['New Listing', 'Commercial Plot, Ashok Nagar — 2,400 sqft'],
+    ['Milestone', '3,800+ Happy Families Housed'],
+    ['Just Sold', 'Independent Villa, Sampatchak — ₹95.5L'],
+    ['Award', '280+ Industry Recognitions'],
+    ['New Listing', '2BHK Ready-to-Move, Patna City'],
+  ];
+  const tickerTrack = document.getElementById('tickerTrack');
+  if (tickerTrack) {
+    const itemHTML = tickerItems.map(([tag, txt]) => `
+      <span class="tick-item">
+        <span class="dot"></span>
+        <b>${tag}:</b> ${txt}
+      </span>
+    `).join('');
+    tickerTrack.innerHTML = itemHTML + itemHTML;
+  }
+
+  // ==========================================================================
+  // PORTAL / DARK MODE TOGGLE
+  // ==========================================================================
+  const portalToggle = document.getElementById('portalToggle');
+  const savedPortalState = localStorage.getItem('portalMode') === 'true';
+
+  if (savedPortalState) {
+    document.body.classList.add('portal');
+  }
+
+  if (portalToggle) {
+    portalToggle.addEventListener('click', () => {
+      document.body.classList.toggle('portal');
+      localStorage.setItem('portalMode', document.body.classList.contains('portal'));
+    });
+  }
+
+  // ==========================================================================
+  // COMMAND PALETTE SEARCH
+  // ==========================================================================
+  const cmdkTrigger = document.getElementById('cmdkTrigger');
+  const cmdkOverlay = document.getElementById('cmdkOverlay');
+  const cmdkInput = document.getElementById('cmdkInput');
+  const cmdkResults = document.getElementById('cmdkResults');
+
+  const openCmdk = () => {
+    if (cmdkOverlay) {
+      cmdkOverlay.classList.add('active');
+      setTimeout(() => cmdkInput.focus(), 150);
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  const closeCmdk = () => {
+    if (cmdkOverlay) {
+      cmdkOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+      cmdkInput.value = '';
+      cmdkResults.innerHTML = '';
+    }
+  };
+
+  if (cmdkTrigger) cmdkTrigger.addEventListener('click', openCmdk);
+
+  // Keyboard shortcut Ctrl+K / Cmd+K
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      openCmdk();
+    }
+    if (e.key === 'Escape') {
+      closeCmdk();
+    }
+  });
+
+  if (cmdkOverlay) {
+    cmdkOverlay.addEventListener('click', (e) => {
+      if (e.target === cmdkOverlay) closeCmdk();
+    });
+  }
+
+  if (cmdkInput && cmdkResults) {
+    cmdkInput.addEventListener('input', () => {
+      const query = cmdkInput.value.toLowerCase().trim();
+      if (!query) {
+        cmdkResults.innerHTML = '';
+        return;
+      }
+
+      const matches = properties.filter(p => 
+        p.name.toLowerCase().includes(query) ||
+        p.loc.toLowerCase().includes(query) ||
+        p.price.toLowerCase().includes(query)
+      );
+
+      if (matches.length === 0) {
+        cmdkResults.innerHTML = `<div class="cmdk-empty">No results found for "${cmdkInput.value}"</div>`;
+        return;
+      }
+
+      cmdkResults.innerHTML = matches.map(p => `
+        <div class="cmdk-item" data-id="${p.id}">
+          <div>
+            <div class="ti">${p.name}</div>
+            <div class="tl">${p.loc}</div>
+          </div>
+          <div class="tp">${p.price}</div>
+        </div>
+      `).join('');
+
+      // Add click listener on results
+      document.querySelectorAll('.cmdk-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const id = item.getAttribute('data-id');
+          const targetCard = document.querySelector(`.gal-card[data-id="${id}"]`);
+          closeCmdk();
+          if (targetCard) {
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetCard.style.outline = '2px solid var(--orange)';
+            setTimeout(() => {
+              targetCard.style.outline = '';
+            }, 2000);
+          }
+        });
+      });
+    });
+  }
+
+  // ==========================================================================
+  // EMI MORTGAGE CALCULATOR
+  // ==========================================================================
+  const emiTrigger = document.getElementById('emiTrigger');
+  const emiOverlay = document.getElementById('emiOverlay');
+  const emiClose = document.getElementById('emiClose');
+  const emiAmt = document.getElementById('emiAmt');
+  const emiTen = document.getElementById('emiTen');
+  const emiRate = document.getElementById('emiRate');
+
+  const emiAmtLbl = document.getElementById('emiAmtLbl');
+  const emiTenLbl = document.getElementById('emiTenLbl');
+  const emiRateLbl = document.getElementById('emiRateLbl');
+  const emiResult = document.getElementById('emiResult');
+
+  const formatCurrency = (val) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0
+    }).format(val);
+  };
+
+  const calculateEMI = () => {
+    if (!emiAmt || !emiTen || !emiRate || !emiResult) return;
+    const P = parseFloat(emiAmt.value);
+    const N = parseFloat(emiTen.value) * 12;
+    const R = parseFloat(emiRate.value) / 12 / 100;
+
+    let monthlyEMI = 0;
+    if (R === 0) {
+      monthlyEMI = P / N;
+    } else {
+      monthlyEMI = P * R * Math.pow(1 + R, N) / (Math.pow(1 + R, N) - 1);
+    }
+
+    if (emiAmtLbl) emiAmtLbl.textContent = formatCurrency(P);
+    if (emiTenLbl) emiTenLbl.textContent = `${emiTen.value} yrs`;
+    if (emiRateLbl) emiRateLbl.textContent = `${emiRate.value}%`;
+    emiResult.textContent = formatCurrency(Math.round(monthlyEMI));
+  };
+
+  if (emiTrigger && emiOverlay) {
+    emiTrigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      emiOverlay.classList.add('active');
+      calculateEMI();
+    });
+  }
+
+  if (emiClose && emiOverlay) {
+    emiClose.addEventListener('click', () => {
+      emiOverlay.classList.remove('active');
+    });
+    emiOverlay.addEventListener('click', (e) => {
+      if (e.target === emiOverlay) emiOverlay.classList.remove('active');
+    });
+  }
+
+  if (emiAmt) emiAmt.addEventListener('input', calculateEMI);
+  if (emiTen) emiTen.addEventListener('input', calculateEMI);
+  if (emiRate) emiRate.addEventListener('input', calculateEMI);
+
+  // ==========================================================================
+  // SAVED LISTINGS (FAVORITES)
+  // ==========================================================================
+  const savedBtn = document.getElementById('savedBtn');
+  const savedOverlay = document.getElementById('savedOverlay');
+  const savedClose = document.getElementById('savedClose');
+  const saveBadge = document.getElementById('saveBadge');
+  const savedModalBody = document.getElementById('savedModalBody');
+  let savedIds = JSON.parse(localStorage.getItem('savedProperties')) || [];
+
+  const updateSaveBadge = () => {
+    if (saveBadge) {
+      saveBadge.textContent = savedIds.length;
+      if (savedIds.length > 0) {
+        saveBadge.classList.add('show');
+      } else {
+        saveBadge.classList.remove('show');
+      }
+    }
+    // Update card buttons state
+    document.querySelectorAll('.gal-card').forEach(card => {
+      const id = card.getAttribute('data-id');
+      const favBtn = card.querySelector('.gal-fav');
+      if (favBtn) {
+        if (savedIds.includes(id)) {
+          favBtn.classList.add('active');
+        } else {
+          favBtn.classList.remove('active');
+        }
+      }
+    });
+  };
+
+  updateSaveBadge();
+
+  // Favorite button clicks on cards
+  document.querySelectorAll('.gal-fav').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.gal-card');
+      const id = card.getAttribute('data-id');
+
+      if (savedIds.includes(id)) {
+        savedIds = savedIds.filter(x => x !== id);
+      } else {
+        savedIds.push(id);
+      }
+
+      localStorage.setItem('savedProperties', JSON.stringify(savedIds));
+      updateSaveBadge();
+    });
+  });
+
+  const renderSavedModal = () => {
+    if (!savedModalBody) return;
+    if (savedIds.length === 0) {
+      savedModalBody.innerHTML = '<div class="saved-empty">You have no saved listings yet.</div>';
+      return;
+    }
+
+    const savedItems = properties.filter(p => savedIds.includes(p.id));
+    savedModalBody.innerHTML = savedItems.map(p => `
+      <div class="saved-item" data-id="${p.id}">
+        <div class="saved-item-img" style="background-image: url('${p.img}')"></div>
+        <div class="saved-item-details">
+          <div class="saved-item-name">${p.name}</div>
+          <div class="saved-item-price">${p.price}</div>
+        </div>
+        <button class="saved-item-remove" aria-label="Remove saved listing">&times;</button>
+      </div>
+    `).join('');
+
+    // Attach remove listener inside modal
+    document.querySelectorAll('.saved-item-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.closest('.saved-item').getAttribute('data-id');
+        savedIds = savedIds.filter(x => x !== id);
+        localStorage.setItem('savedProperties', JSON.stringify(savedIds));
+        updateSaveBadge();
+        renderSavedModal();
+      });
+    });
+  };
+
+  if (savedBtn && savedOverlay) {
+    savedBtn.addEventListener('click', () => {
+      savedOverlay.classList.add('active');
+      renderSavedModal();
+    });
+  }
+
+  if (savedClose && savedOverlay) {
+    savedClose.addEventListener('click', () => {
+      savedOverlay.classList.remove('active');
+    });
+    savedOverlay.addEventListener('click', (e) => {
+      if (e.target === savedOverlay) savedOverlay.classList.remove('active');
+    });
+  }
+
+  // ==========================================================================
+  // PROPERTY COMPARISON SYSTEM
+  // ==========================================================================
+  const compareDrawer = document.getElementById('compareDrawer');
+  const compareChips = document.getElementById('compareChips');
+  const compareCount = document.getElementById('compareCount');
+  const compareBtn = document.getElementById('compareBtn');
+  const clearCompareBtn = document.getElementById('clearCompareBtn');
+  const compareOverlay = document.getElementById('compareOverlay');
+  const compareClose = document.getElementById('compareClose');
+  const compareModalBody = document.getElementById('compareModalBody');
+  let compareIds = [];
+
+  const updateCompareUI = () => {
+    // Update card buttons
+    document.querySelectorAll('.gal-card').forEach(card => {
+      const id = card.getAttribute('data-id');
+      const cmpBtn = card.querySelector('.gal-cmp');
+      if (cmpBtn) {
+        if (compareIds.includes(id)) {
+          cmpBtn.classList.add('active');
+        } else {
+          cmpBtn.classList.remove('active');
+        }
+      }
+    });
+
+    // Update bottom drawer
+    if (compareIds.length > 0) {
+      if (compareCount) compareCount.textContent = `${compareIds.length} selected`;
+      if (compareDrawer) compareDrawer.classList.add('show');
+
+      const comparedItems = properties.filter(p => compareIds.includes(p.id));
+      if (compareChips) {
+        compareChips.innerHTML = comparedItems.map(p => `
+          <div class="cd-chip" data-id="${p.id}">
+            <span>${p.name.split(',')[0]}</span>
+            <button class="remove-chip-btn" aria-label="Remove from comparison">&times;</button>
+          </div>
+        `).join('');
+
+        // Attach listeners to chip remove buttons
+        document.querySelectorAll('.remove-chip-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.closest('.cd-chip').getAttribute('data-id');
+            compareIds = compareIds.filter(x => x !== id);
+            updateCompareUI();
+          });
+        });
+      }
+    } else {
+      if (compareDrawer) compareDrawer.classList.remove('show');
+    }
+  };
+
+  document.querySelectorAll('.gal-cmp').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.gal-card');
+      const id = card.getAttribute('data-id');
+
+      if (compareIds.includes(id)) {
+        compareIds = compareIds.filter(x => x !== id);
+      } else {
+        if (compareIds.length >= 3) {
+          alert('You can compare a maximum of 3 properties at a time.');
+          return;
+        }
+        compareIds.push(id);
+      }
+
+      updateCompareUI();
+    });
+  });
+
+  if (clearCompareBtn) {
+    clearCompareBtn.addEventListener('click', () => {
+      compareIds = [];
+      updateCompareUI();
+    });
+  }
+
+  // Compare Now trigger modal comparison table
+  if (compareBtn && compareOverlay) {
+    compareBtn.addEventListener('click', () => {
+      compareOverlay.classList.add('active');
+      renderCompareTable();
+    });
+  }
+
+  if (compareClose && compareOverlay) {
+    compareClose.addEventListener('click', () => {
+      compareOverlay.classList.remove('active');
+    });
+    compareOverlay.addEventListener('click', (e) => {
+      if (e.target === compareOverlay) compareOverlay.classList.remove('active');
+    });
+  }
+
+  const renderCompareTable = () => {
+    if (!compareModalBody) return;
+    const compared = properties.filter(p => compareIds.includes(p.id));
+
+    compareModalBody.innerHTML = `
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            ${compared.map(p => `<th>${p.name}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="prop-col">Location</td>
+            ${compared.map(p => `<td>${p.loc}</td>`).join('')}
+          </tr>
+          <tr>
+            <td class="prop-col">Price</td>
+            ${compared.map(p => `<td style="font-family:'IBM Plex Mono',monospace; color:var(--orange-deep)">${p.price}</td>`).join('')}
+          </tr>
+          <tr>
+            <td class="prop-col">Area Size</td>
+            ${compared.map(p => `<td class="mono">${p.sqft}</td>`).join('')}
+          </tr>
+          <tr>
+            <td class="prop-col">Walk Score</td>
+            ${compared.map(p => `<td>Walk Score ${p.walk}</td>`).join('')}
+          </tr>
+        </tbody>
+      </table>
+    `;
+  };
+
+  // ==========================================================================
+  // FAQ ACCORDIONS
+  // ==========================================================================
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const qButton = item.querySelector('.faq-q');
+    const aPanel = item.querySelector('.faq-a');
+    
+    // Set initial active state height
+    if (item.classList.contains('open') && aPanel) {
+      aPanel.style.maxHeight = `${aPanel.scrollHeight}px`;
+    }
+
+    if (qButton) {
+      qButton.addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+
+        // Close all items
+        document.querySelectorAll('.faq-item').forEach(i => {
+          i.classList.remove('open');
+          const panel = i.querySelector('.faq-a');
+          if (panel) panel.style.maxHeight = '0px';
+        });
+
+        // Toggle clicked item
+        if (!isOpen && aPanel) {
+          item.classList.add('open');
+          aPanel.style.maxHeight = `${aPanel.scrollHeight}px`;
+        }
+      });
+    }
+  });
+
+  // ==========================================================================
+  // AI CHATBOT PANEL WIDGET
+  // ==========================================================================
+  const chatFab = document.getElementById('chatFab');
+  const chatPanel = document.getElementById('chatPanel');
+  const chatClose = document.getElementById('chatClose');
+  const chatBody = document.getElementById('chatBody');
+  const chatInput = document.getElementById('chatInput');
+  const chatSend = document.getElementById('chatSend');
+  const agentBadge = document.getElementById('agentBadge');
+  const agentBadgeClose = document.getElementById('agentBadgeClose');
+
+  const botResponses = {
+    visit: "We'd love to host you! Guided visits to Ashok Nagar, Kankarbagh, and Sampatchak can be scheduled daily between 10 AM and 5 PM. Can we call you at +91 94729 72509 to confirm a slot?",
+    emi: "Sure! You can open our interactive EMI Calculator using the bottom feature bar. Our plots are approved by SBI and HDFC, offering interest rates starting from 8.4%.",
+    agent: "Our senior property advisor is available now. You can reach out directly via WhatsApp or call us at +91 94729 72509. We'd love to chat!",
+    default: "Thank you for writing. Please let us know your requirements, or call us at +91 94729 72509 for immediate support."
+  };
+
+  const addChatBubble = (text, isBot = true) => {
+    if (!chatBody) return;
+    const bubble = document.createElement('div');
+    bubble.className = `msg ${isBot ? 'bot' : 'user'}`;
+    bubble.textContent = text;
+    chatBody.appendChild(bubble);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  };
+
+  const simulateBotReply = (key) => {
+    if (!chatBody) return;
+    // Add typing indicators
+    const typingIndicator = document.createElement('div');
+    typingIndicator.className = 'typing';
+    typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+    chatBody.appendChild(typingIndicator);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    setTimeout(() => {
+      typingIndicator.remove();
+      const reply = botResponses[key] || botResponses.default;
+      addChatBubble(reply, true);
+    }, 1000);
+  };
+
+  if (chatFab && chatPanel) {
+    chatFab.addEventListener('click', () => {
+      chatPanel.classList.toggle('open');
+      if (agentBadge) agentBadge.classList.remove('show');
+    });
+  }
+
+  if (chatClose && chatPanel) {
+    chatClose.addEventListener('click', () => {
+      chatPanel.classList.remove('open');
+    });
+  }
+
+  // Trigger agent status badge initially after 2.5 seconds delay
+  setTimeout(() => {
+    if (agentBadge && !chatPanel.classList.contains('open')) {
+      agentBadge.classList.add('show');
+    }
+  }, 2500);
+
+  if (agentBadgeClose && agentBadge) {
+    agentBadgeClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      agentBadge.classList.remove('show');
+    });
+  }
+
+  // Preset chips handler
+  document.querySelectorAll('.chat-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const text = chip.textContent;
+      const key = chip.getAttribute('data-r');
+      addChatBubble(text, false);
+      simulateBotReply(key);
+    });
+  });
+
+  // TextInput sends messages
+  const handleInputSend = () => {
+    if (!chatInput) return;
+    const val = chatInput.value.trim();
+    if (!val) return;
+
+    addChatBubble(val, false);
+    chatInput.value = '';
+
+    const query = val.toLowerCase();
+    let replyKey = 'default';
+    if (query.includes('visit') || query.includes('book') || query.includes('site')) {
+      replyKey = 'visit';
+    } else if (query.includes('emi') || query.includes('calculator') || query.includes('mortgage')) {
+      replyKey = 'emi';
+    } else if (query.includes('agent') || query.includes('advisor') || query.includes('call')) {
+      replyKey = 'agent';
+    }
+
+    simulateBotReply(replyKey);
+  };
+
+  if (chatSend) {
+    chatSend.addEventListener('click', handleInputSend);
+  }
+  if (chatInput) {
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleInputSend();
+    });
+  }
+
+  // Mobile Hamburger Menu Toggle
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuClose = document.getElementById('menuClose');
+
+  if (menuToggle && mobileMenu) {
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+
+  if (menuClose && mobileMenu) {
+    menuClose.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  }
+
+  // Close menu when links are clicked
+  document.querySelectorAll('.mobile-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (mobileMenu) {
+        mobileMenu.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
